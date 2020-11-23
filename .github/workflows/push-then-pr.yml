@@ -1,0 +1,35 @@
+# This CI will run after publish a new release
+
+name: Push to Other Repo and Make a PR
+
+on:
+  release:
+    types: [published]
+  
+jobs:
+  processing_docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Push then create PR
+        uses: sepulsa/push_then_pr@master
+        env:
+            API_TOKEN_GITHUB: ${{ secrets.API_INTEGRATED_REPO }}
+
+            DEST_GITHUB_USERNAME: 'sepulsa'
+            DEST_REPO_NAME: 'Techops-Knowledge-Base'
+            USER_EMAIL: 'test@example.com'
+            PUSH_TO_BRANCH: 'docs-silo-v2'
+            PR_TO_BRANCH: 'master'
+            # You can add multiple source file or folder separate by space
+#             SRC_DIR: 'readme.adoc docs test/readme2.adoc'
+            SRC_DIR: 'readme.adoc docs'
+            # You can create nested folder
+            DEST_DIR: 'telco/silo-v2'
+            # You can rename with format source(comma)target
+            # Multiple line if you want to move multiple file / folder
+            RENAME: >-
+                    readme.adoc,docs.adoc 
+#                     readme2.adoc,docs2.adoc
+            # Add your custom Pull Request message
+            PR_MESSAGE: 'New release from silo V2'
